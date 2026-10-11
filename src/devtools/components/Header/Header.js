@@ -22,6 +22,13 @@ const Header = (props) => (
     <div className="form-group">
       <div className="checkbox">
         <label>
+          <input type="checkbox" checked={props.preserveLog} onChange={props.togglePreserveLog} /> Preserve log
+        </label>
+      </div>
+    </div>
+    <div className="form-group">
+      <div className="checkbox">
+        <label>
           <input type="checkbox" checked={props.hideXmlns} onChange={props.toggleHideXmlns} /> Hide XML namespaces
         </label>
       </div>

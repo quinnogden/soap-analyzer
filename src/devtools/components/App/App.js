@@ -13,7 +13,8 @@ class App extends React.Component {
       services : [],
       filter : '',
       hideXmlns : props.settings.hideXmlns,
-      onlyBody : props.settings.onlyBody
+      onlyBody : props.settings.onlyBody,
+      preserveLog : props.settings.preserveLog
     };
     this.addService = this.addService.bind(this);
     this.clearServices = this.clearServices.bind(this);
@@ -22,6 +23,7 @@ class App extends React.Component {
     this.onNetworkSOAPRequest = this.onNetworkSOAPRequest.bind(this);
     this.toggleHideXmlns = this.toggleHideXmlns.bind(this);
     this.toggleOnlyBody = this.toggleOnlyBody.bind(this);
+    this.togglePreserveLog = this.togglePreserveLog.bind(this);
     this.setFilter = this.setFilter.bind(this);
   }
 
@@ -29,6 +31,12 @@ class App extends React.Component {
     chrome.devtools.network.onRequestFinished.addListener((request) => {
       if(isSOAPRequest(request)) {
         this.onNetworkSOAPRequest(request);
+      }
+    });
+    // Like the Network tab, start a fresh list on page load unless preserving the log
+    chrome.devtools.network.onNavigated.addListener(() => {
+      if(!this.state.preserveLog) {
+        this.clearServices();
       }
     });
   }
@@ -126,6 +134,15 @@ class App extends React.Component {
     });
   }
 
+  togglePreserveLog() {
+    const newPreserveLog = {
+      preserveLog: !this.state.preserveLog
+    };
+    chrome.storage.sync.set(newPreserveLog, () => {
+      this.setState(() => (newPreserveLog));
+    });
+  }
+
   setFilter(filter) {
     this.setState(() => ({ filter }));
   }
@@ -149,10 +166,12 @@ class App extends React.Component {
         setActiveService={this.setActiveService}
         toggleHideXmlns={this.toggleHideXmlns}
         toggleOnlyBody={this.toggleOnlyBody}
+        togglePreserveLog={this.togglePreserveLog}
         setFilter={this.setFilter}
         filter={this.state.filter}
         hideXmlns={this.state.hideXmlns}
         onlyBody={this.state.onlyBody}
+        preserveLog={this.state.preserveLog}
         theme={this.props.theme}
       />
     );

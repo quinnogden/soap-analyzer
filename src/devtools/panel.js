@@ -8,7 +8,8 @@ import './themes/themes.css';
 
 const defaultSettings = {
   hideXmlns: true,
-  onlyBody : true
+  onlyBody : true,
+  preserveLog: false
 };
 
 // Follow the DevTools theme rather than a separate setting
