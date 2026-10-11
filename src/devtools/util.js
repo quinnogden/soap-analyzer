@@ -20,6 +20,8 @@ export const isSOAPRequest = (request) => {
 export const getWebServiceName = async (xml) => {
   return new Promise((resolve, reject) => {
     const parseConfig = {
+      // Attributes on Body would otherwise appear as a '$' key ahead of the service name
+      ignoreAttrs: true,
       tagNameProcessors: [stripPrefix]
     };
     parseString(xml, parseConfig, (err, result) => {
