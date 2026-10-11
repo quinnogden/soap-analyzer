@@ -11,6 +11,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       services : [],
+      filter : '',
       hideXmlns : props.settings.hideXmlns,
       onlyBody : props.settings.onlyBody
     };
@@ -21,6 +22,7 @@ class App extends React.Component {
     this.onNetworkSOAPRequest = this.onNetworkSOAPRequest.bind(this);
     this.toggleHideXmlns = this.toggleHideXmlns.bind(this);
     this.toggleOnlyBody = this.toggleOnlyBody.bind(this);
+    this.setFilter = this.setFilter.bind(this);
   }
 
   componentDidMount() {
@@ -124,10 +126,22 @@ class App extends React.Component {
     });
   }
 
+  setFilter(filter) {
+    this.setState(() => ({ filter }));
+  }
+
+  getFilteredServices() {
+    const filter = this.state.filter.trim().toLowerCase();
+    if(!filter) return this.state.services;
+    return this.state.services.filter((service) => {
+      return service.name.toLowerCase().includes(filter);
+    });
+  }
+
   render() {
     return (
       <SoapAnalyzer
-        services={this.state.services}
+        services={this.getFilteredServices()}
         settings={this.props.settings}
         activeService={this.getActiveService()}
         addService={this.addService}
@@ -135,6 +149,8 @@ class App extends React.Component {
         setActiveService={this.setActiveService}
         toggleHideXmlns={this.toggleHideXmlns}
         toggleOnlyBody={this.toggleOnlyBody}
+        setFilter={this.setFilter}
+        filter={this.state.filter}
         hideXmlns={this.state.hideXmlns}
         onlyBody={this.state.onlyBody}
         theme={this.props.theme}

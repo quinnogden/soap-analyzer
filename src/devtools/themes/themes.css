@@ -16,6 +16,9 @@
   /* Header Variables */
   --header-font-color: currentColor;
   --header-background-color: transparent;
+  --input-font-color: #333;
+  --input-background-color: #fff;
+  --input-border-color: #ccc;
 
   /* Tab Variables */
   --tab-font-color: currentColor;
@@ -60,6 +63,9 @@
   /* Header Variables */
   --header-font-color: #b9b9b9;
   --header-background-color: rgb(36, 36, 36);
+  --input-font-color: #e0e0e0;
+  --input-background-color: rgb(51, 51, 51);
+  --input-border-color: rgb(80, 80, 80);
 
   /* Tab Variables */
   --tab-font-color: #fff;
@@ -127,6 +133,12 @@
 .Header .form-group,
 .Header label {
   color: var(--header-font-color);
+}
+
+.Header .Header__filter {
+  color: var(--input-font-color);
+  background-color: var(--input-background-color);
+  border-color: var(--input-border-color);
 }
 
 /* Tab Styles */
