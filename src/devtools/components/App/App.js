@@ -26,6 +26,7 @@ class App extends React.Component {
     this.toggleOnlyBody = this.toggleOnlyBody.bind(this);
     this.togglePreserveLog = this.togglePreserveLog.bind(this);
     this.toggleShowInterfaceNames = this.toggleShowInterfaceNames.bind(this);
+    this.saveListWidth = this.saveListWidth.bind(this);
     this.setFilter = this.setFilter.bind(this);
   }
 
@@ -155,6 +156,11 @@ class App extends React.Component {
     });
   }
 
+  // Only saved, the split view keeps the width it's showing
+  saveListWidth(listWidth) {
+    chrome.storage.sync.set({ listWidth });
+  }
+
   setFilter(filter) {
     this.setState(() => ({ filter }));
   }
@@ -182,6 +188,7 @@ class App extends React.Component {
         toggleOnlyBody={this.toggleOnlyBody}
         togglePreserveLog={this.togglePreserveLog}
         toggleShowInterfaceNames={this.toggleShowInterfaceNames}
+        saveListWidth={this.saveListWidth}
         setFilter={this.setFilter}
         filter={this.state.filter}
         hideXmlns={this.state.hideXmlns}

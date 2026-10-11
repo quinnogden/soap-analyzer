@@ -10,7 +10,9 @@ const defaultSettings = {
   hideXmlns: true,
   onlyBody : true,
   preserveLog: false,
-  showInterfaceNames: false
+  showInterfaceNames: false,
+  // Percentage of the panel's width
+  listWidth: 25
 };
 
 // Follow the DevTools theme rather than a separate setting

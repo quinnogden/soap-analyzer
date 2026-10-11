@@ -1,0 +1,28 @@
+.SplitView {
+  display: flex;
+}
+
+.SplitView__pane {
+  position: relative;
+  /* Let the panes be narrower than their content, which is cut off instead */
+  min-width: 0;
+}
+
+/* Wider than the 1px border it sits on, so it's easier to grab */
+.SplitView__divider {
+  position: absolute;
+  top: 0;
+  right: -3px;
+  bottom: 0;
+  width: 6px;
+  z-index: 1;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+/* Keep the resize cursor everywhere while dragging, even over the editor */
+.SplitView.dragging,
+.SplitView.dragging * {
+  cursor: col-resize !important;
+  user-select: none;
+}
