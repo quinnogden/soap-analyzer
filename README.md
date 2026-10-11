@@ -8,6 +8,7 @@ A developer tools chrome extension which allows users to easily track any SOAP H
 - Parses XML request and response of each web service call, and displays them in an [text editor](https://ace.c9.io/) with collapsible nodes and syntax highlighting.
 - Ability to toggle Envelope, Header, and Body tags, to allow users to focus on content of requests and responses.
 - Ability to toggle 'xmlns' flavored properties on XML nodes to de-clutter and improve readability.
+- Failed web service calls (HTTP errors or no response) are highlighted in red.
 - Automatically matches the light or dark theme of the browser's dev tools.
 
 ## Demo

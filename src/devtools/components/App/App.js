@@ -2,7 +2,7 @@ import React from 'react';
 import { html as beautifyHTML } from 'js-beautify';
 import uuidV4 from 'uuid/v4';
 import SoapAnalyzer from '../SoapAnalyzer/SoapAnalyzer';
-import { isSOAPRequest, getWebServiceName, getSoapBodyContents, removeXmlns } from '../../util';
+import { isSOAPRequest, isFailedRequest, getWebServiceName, getSoapBodyContents, removeXmlns } from '../../util';
 import './App.css';
 
 class App extends React.Component {
@@ -38,6 +38,7 @@ class App extends React.Component {
       id: uuidV4(),
       name: webServiceName,
       isActive: false,
+      failed: isFailedRequest(request),
       request
     });
   }
