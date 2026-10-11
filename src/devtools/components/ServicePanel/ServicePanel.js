@@ -63,7 +63,10 @@ class ServicePanel extends React.Component {
       height: 'calc(100vh - 58px)',
       showPrintMargin: false,
       highlightActiveLine: false,
-      editorProps: {$blockScrolling: true}
+      editorProps: {$blockScrolling: true},
+      // Ace's syntax-check worker loads from a blob: URL, which the
+      // Manifest V3 content security policy blocks
+      setOptions: {useWorker: false}
     };
     let requestValue;
     let responseValue;
