@@ -11,7 +11,6 @@ class App extends React.Component {
     super(props);
     this.state = {
       services : [],
-      theme : props.settings.theme,
       hideXmlns : props.settings.hideXmlns,
       onlyBody : props.settings.onlyBody
     };
@@ -21,7 +20,6 @@ class App extends React.Component {
     this.getActiveService = this.getActiveService.bind(this);
     this.onNetworkSOAPRequest = this.onNetworkSOAPRequest.bind(this);
     this.toggleHideXmlns = this.toggleHideXmlns.bind(this);
-    this.toggleDarkTheme = this.toggleDarkTheme.bind(this);
     this.toggleOnlyBody = this.toggleOnlyBody.bind(this);
   }
 
@@ -107,15 +105,6 @@ class App extends React.Component {
     });
   }
 
-  toggleDarkTheme() {
-    const newTheme = {
-      theme: this.state.theme === 'default' ? 'dark' : 'default'
-    };
-    chrome.storage.sync.set(newTheme, () => {
-      this.setState(() => (newTheme));
-    });
-  }
-
   toggleHideXmlns() {
     const newHideXmlns = {
       hideXmlns: !this.state.hideXmlns
@@ -144,11 +133,10 @@ class App extends React.Component {
         clearServices={this.clearServices}
         setActiveService={this.setActiveService}
         toggleHideXmlns={this.toggleHideXmlns}
-        toggleDarkTheme={this.toggleDarkTheme}
         toggleOnlyBody={this.toggleOnlyBody}
         hideXmlns={this.state.hideXmlns}
         onlyBody={this.state.onlyBody}
-        theme={this.state.theme}
+        theme={this.props.theme}
       />
     );
   }

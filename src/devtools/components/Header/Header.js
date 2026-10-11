@@ -23,13 +23,6 @@ const Header = (props) => (
         </label>
       </div>
     </div>
-    <div className="form-group">
-      <div className="checkbox">
-        <label>
-          <input type="checkbox" checked={props.theme === 'dark'} onChange={props.toggleDarkTheme} /> Use dark theme
-        </label>
-      </div>
-    </div>
   </div>
 );
 
