@@ -5,6 +5,7 @@
 A developer tools chrome extension which allows users to easily track any SOAP HTTP requests that are made by the browser. It's meant to act as the Network tab, but only for SOAP HTTP traffic, currently has ~3,500 actively weekly users. It includes the following features:
 
 - Display list of SOAP web service calls made by service name instead of by URL.
+- Option to list calls by the interface names in the request (its `InterfaceName` elements) instead. Calls without one keep their service name.
 - Parses XML request and response of each web service call, and displays them in an [text editor](https://ace.c9.io/) with collapsible nodes and syntax highlighting.
 - Ability to toggle Envelope, Header, and Body tags, to allow users to focus on content of requests and responses.
 - Ability to toggle 'xmlns' flavored properties on XML nodes to de-clutter and improve readability.

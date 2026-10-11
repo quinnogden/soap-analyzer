@@ -42,6 +42,26 @@ export const getWebServiceName = async (xml) => {
   });
 };
 
+// Values of the request's InterfaceName elements, in order and without repeats.
+// Services that send them use them to name the screen or form a call is for.
+export const getInterfaceNames = (xml) => {
+  const $ = cheerio.load(xml, { xmlMode: true });
+  const names = $('*')
+    .filter((i, elem) => elem.name.split(':').pop() === 'InterfaceName')
+    .map((i, elem) => $(elem).text().trim())
+    .get()
+    .filter((name) => name);
+  return [...new Set(names)];
+};
+
+// What the service list shows for a service, which is also what the filter matches
+export const getListNames = (service, showInterfaceNames) => {
+  if(showInterfaceNames && service.interfaceNames.length) {
+    return service.interfaceNames;
+  }
+  return [service.name];
+};
+
 export const removeXmlns = (xml) => {
   const $ = cheerio.load(xml, { xmlMode: true });
   $('*').each((i, elem) => {

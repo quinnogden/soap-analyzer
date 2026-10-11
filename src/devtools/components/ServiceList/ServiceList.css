@@ -21,6 +21,16 @@
   -webkit-user-select: none;
 }
 
+/* A request can have several interface names, shown one per line */
+.ServiceList__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ServiceList__name + .ServiceList__name {
+  margin-top: 4px;
+}
+
 .ServiceList .list-group-item:hover,
 .ServiceList .list-group-item:focus  {
   text-decoration: underline;

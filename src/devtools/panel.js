@@ -9,7 +9,8 @@ import './themes/themes.css';
 const defaultSettings = {
   hideXmlns: true,
   onlyBody : true,
-  preserveLog: false
+  preserveLog: false,
+  showInterfaceNames: false
 };
 
 // Follow the DevTools theme rather than a separate setting

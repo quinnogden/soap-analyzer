@@ -2,7 +2,7 @@ import React from 'react';
 import { html as beautifyHTML } from 'js-beautify';
 import uuidV4 from 'uuid/v4';
 import SoapAnalyzer from '../SoapAnalyzer/SoapAnalyzer';
-import { isSOAPRequest, isFailedRequest, getWebServiceName, getSoapBodyContents, removeXmlns } from '../../util';
+import { isSOAPRequest, isFailedRequest, getWebServiceName, getInterfaceNames, getListNames, getSoapBodyContents, removeXmlns } from '../../util';
 import './App.css';
 
 class App extends React.Component {
@@ -14,7 +14,8 @@ class App extends React.Component {
       filter : '',
       hideXmlns : props.settings.hideXmlns,
       onlyBody : props.settings.onlyBody,
-      preserveLog : props.settings.preserveLog
+      preserveLog : props.settings.preserveLog,
+      showInterfaceNames : props.settings.showInterfaceNames
     };
     this.addService = this.addService.bind(this);
     this.clearServices = this.clearServices.bind(this);
@@ -24,6 +25,7 @@ class App extends React.Component {
     this.toggleHideXmlns = this.toggleHideXmlns.bind(this);
     this.toggleOnlyBody = this.toggleOnlyBody.bind(this);
     this.togglePreserveLog = this.togglePreserveLog.bind(this);
+    this.toggleShowInterfaceNames = this.toggleShowInterfaceNames.bind(this);
     this.setFilter = this.setFilter.bind(this);
   }
 
@@ -47,6 +49,7 @@ class App extends React.Component {
     this.addService({
       id: uuidV4(),
       name: webServiceName,
+      interfaceNames: getInterfaceNames(rawRequestXML),
       isActive: false,
       failed: isFailedRequest(request),
       request
@@ -143,6 +146,15 @@ class App extends React.Component {
     });
   }
 
+  toggleShowInterfaceNames() {
+    const newShowInterfaceNames = {
+      showInterfaceNames: !this.state.showInterfaceNames
+    };
+    chrome.storage.sync.set(newShowInterfaceNames, () => {
+      this.setState(() => (newShowInterfaceNames));
+    });
+  }
+
   setFilter(filter) {
     this.setState(() => ({ filter }));
   }
@@ -151,7 +163,9 @@ class App extends React.Component {
     const filter = this.state.filter.trim().toLowerCase();
     if(!filter) return this.state.services;
     return this.state.services.filter((service) => {
-      return service.name.toLowerCase().includes(filter);
+      return getListNames(service, this.state.showInterfaceNames).some((name) => {
+        return name.toLowerCase().includes(filter);
+      });
     });
   }
 
@@ -167,11 +181,13 @@ class App extends React.Component {
         toggleHideXmlns={this.toggleHideXmlns}
         toggleOnlyBody={this.toggleOnlyBody}
         togglePreserveLog={this.togglePreserveLog}
+        toggleShowInterfaceNames={this.toggleShowInterfaceNames}
         setFilter={this.setFilter}
         filter={this.state.filter}
         hideXmlns={this.state.hideXmlns}
         onlyBody={this.state.onlyBody}
         preserveLog={this.state.preserveLog}
+        showInterfaceNames={this.state.showInterfaceNames}
         theme={this.props.theme}
       />
     );

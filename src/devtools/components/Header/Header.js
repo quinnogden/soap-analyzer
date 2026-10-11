@@ -29,6 +29,13 @@ const Header = (props) => (
     <div className="form-group">
       <div className="checkbox">
         <label>
+          <input type="checkbox" checked={props.showInterfaceNames} onChange={props.toggleShowInterfaceNames} /> Show interface names
+        </label>
+      </div>
+    </div>
+    <div className="form-group">
+      <div className="checkbox">
+        <label>
           <input type="checkbox" checked={props.hideXmlns} onChange={props.toggleHideXmlns} /> Hide XML namespaces
         </label>
       </div>
