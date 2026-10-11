@@ -2,7 +2,7 @@ import React from 'react';
 import { html as beautifyHTML } from 'js-beautify';
 import uuidV4 from 'uuid/v4';
 import SoapAnalyzer from '../SoapAnalyzer/SoapAnalyzer';
-import { isSOAPRequest, isFailedRequest, getWebServiceName, getInterfaceNames, getListNames, getSoapBodyContents, removeXmlns } from '../../util';
+import { isSOAPRequest, isFailedRequest, getWebServiceName, getInterfaceNames, getListNames, getSoapBodyContents, removeXmlns, toReadable } from '../../util';
 import './App.css';
 
 class App extends React.Component {
@@ -15,7 +15,8 @@ class App extends React.Component {
       hideXmlns : props.settings.hideXmlns,
       onlyBody : props.settings.onlyBody,
       preserveLog : props.settings.preserveLog,
-      showInterfaceNames : props.settings.showInterfaceNames
+      showInterfaceNames : props.settings.showInterfaceNames,
+      readableView : props.settings.readableView
     };
     this.addService = this.addService.bind(this);
     this.clearServices = this.clearServices.bind(this);
@@ -26,6 +27,7 @@ class App extends React.Component {
     this.toggleOnlyBody = this.toggleOnlyBody.bind(this);
     this.togglePreserveLog = this.togglePreserveLog.bind(this);
     this.toggleShowInterfaceNames = this.toggleShowInterfaceNames.bind(this);
+    this.toggleReadableView = this.toggleReadableView.bind(this);
     this.saveListWidth = this.saveListWidth.bind(this);
     this.setFilter = this.setFilter.bind(this);
   }
@@ -90,6 +92,18 @@ class App extends React.Component {
           }
           if(!service.prettyResponseNoXmlnsOnlyBody) {
             service.prettyResponseNoXmlnsOnlyBody = removeXmlns(service.prettyResponseOnlyBody);
+          }
+          if(!service.readableRequest) {
+            service.readableRequest = toReadable(rawRequestXML);
+          }
+          if(!service.readableResponse) {
+            service.readableResponse = toReadable(rawResponseXML);
+          }
+          if(!service.readableRequestOnlyBody) {
+            service.readableRequestOnlyBody = toReadable(service.requestOnlyBody);
+          }
+          if(!service.readableResponseOnlyBody) {
+            service.readableResponseOnlyBody = toReadable(service.responseOnlyBody);
           }
           service.isActive = true;
           return service;
@@ -156,6 +170,15 @@ class App extends React.Component {
     });
   }
 
+  toggleReadableView() {
+    const newReadableView = {
+      readableView: !this.state.readableView
+    };
+    chrome.storage.sync.set(newReadableView, () => {
+      this.setState(() => (newReadableView));
+    });
+  }
+
   // Only saved, the split view keeps the width it's showing
   saveListWidth(listWidth) {
     chrome.storage.sync.set({ listWidth });
@@ -188,6 +211,7 @@ class App extends React.Component {
         toggleOnlyBody={this.toggleOnlyBody}
         togglePreserveLog={this.togglePreserveLog}
         toggleShowInterfaceNames={this.toggleShowInterfaceNames}
+        toggleReadableView={this.toggleReadableView}
         saveListWidth={this.saveListWidth}
         setFilter={this.setFilter}
         filter={this.state.filter}
@@ -195,6 +219,7 @@ class App extends React.Component {
         onlyBody={this.state.onlyBody}
         preserveLog={this.state.preserveLog}
         showInterfaceNames={this.state.showInterfaceNames}
+        readableView={this.state.readableView}
         theme={this.props.theme}
       />
     );

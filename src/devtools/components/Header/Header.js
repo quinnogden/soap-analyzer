@@ -36,7 +36,14 @@ const Header = (props) => (
     <div className="form-group">
       <div className="checkbox">
         <label>
-          <input type="checkbox" checked={props.hideXmlns} onChange={props.toggleHideXmlns} /> Hide XML namespaces
+          <input type="checkbox" checked={props.readableView} onChange={props.toggleReadableView} /> Readable view
+        </label>
+      </div>
+    </div>
+    <div className="form-group">
+      <div className={`checkbox ${props.readableView ? 'disabled' : ''}`}>
+        <label title={props.readableView ? 'The readable view always hides them' : ''}>
+          <input type="checkbox" checked={props.hideXmlns} onChange={props.toggleHideXmlns} disabled={props.readableView} /> Hide XML namespaces
         </label>
       </div>
     </div>

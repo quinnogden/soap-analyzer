@@ -7,6 +7,7 @@ import TabPanel from '../TabPanel/TabPanel';
 import 'brace/theme/github';
 import 'brace/theme/tomorrow_night';
 import 'brace/mode/xml';
+import './readableMode';
 import './ServicePanel.css';
 
 class ServicePanel extends React.Component {
@@ -46,7 +47,7 @@ class ServicePanel extends React.Component {
   }
 
   render() {
-    const { activeService, theme, hideXmlns, onlyBody } = this.props;
+    const { activeService, theme, hideXmlns, onlyBody, readableView } = this.props;
     if(!activeService) return null;
     // Map SOAP Analyzer themes to brace themes
     const editorTheme = {
@@ -54,7 +55,7 @@ class ServicePanel extends React.Component {
       'dark': 'tomorrow_night'
     };
     const editorSettings = {
-      mode: 'xml',
+      mode: readableView ? 'readable' : 'xml',
       theme: editorTheme[theme],
       fontSize: 15,
       tabSize: 2,
@@ -70,7 +71,14 @@ class ServicePanel extends React.Component {
     };
     let requestValue;
     let responseValue;
-    if(hideXmlns && !onlyBody) {
+    // The readable view always leaves out namespaces
+    if(readableView && onlyBody) {
+      requestValue = activeService.readableRequestOnlyBody;
+      responseValue = activeService.readableResponseOnlyBody;
+    } else if(readableView) {
+      requestValue = activeService.readableRequest;
+      responseValue = activeService.readableResponse;
+    } else if(hideXmlns && !onlyBody) {
       requestValue = activeService.prettyRequestNoXmlns;
       responseValue = activeService.prettyResponseNoXmlns;
     } else if(!hideXmlns && onlyBody) {

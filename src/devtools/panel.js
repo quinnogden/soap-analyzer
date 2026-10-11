@@ -11,6 +11,7 @@ const defaultSettings = {
   onlyBody : true,
   preserveLog: false,
   showInterfaceNames: false,
+  readableView: false,
   // Percentage of the panel's width
   listWidth: 25
 };

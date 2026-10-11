@@ -80,3 +80,115 @@ export const getSoapBodyContents = (xml) => {
   const body = $('*').filter((i, elem) => elem.name.split(':').pop() === 'Body').first();
   return $.xml(body.children().first());
 };
+
+const INDENT = '  ';
+
+const localName = (elem) => elem.name.split(':').pop();
+
+const childElements = (elem) => elem.children.filter((child) => child.type === 'tag');
+
+// All the text inside an element, including CDATA sections
+const getText = (elem) => elem.children.map((child) => {
+  if(child.type === 'text') return child.data;
+  return child.children ? getText(child) : '';
+}).join('');
+
+// Trims the blank lines around text, and a single line's spaces
+const cleanText = (text) => {
+  const trimmed = text.replace(/\r\n?/g, '\n').replace(/^\s*\n/, '').trimEnd();
+  return trimmed.includes('\n') ? trimmed : trimmed.trim();
+};
+
+// A "name: value" line. A value with several lines goes below it, each marked with a |
+const addEntry = (lines, depth, name, value = '') => {
+  const indent = INDENT.repeat(depth);
+  if(!value.includes('\n')) {
+    lines.push(`${indent}${name}:${value ? ` ${value}` : ''}`);
+    return;
+  }
+  lines.push(`${indent}${name}:`);
+  value.split('\n').forEach((line) => {
+    lines.push(`${indent}${INDENT}|${line.trim() ? ` ${line.trimEnd()}` : ''}`);
+  });
+};
+
+const addAttributes = (lines, depth, elem) => {
+  Object.keys(elem.attribs)
+    // Namespace declarations and xsi:type only describe the XML itself
+    .filter((name) => !name.startsWith('xmlns') && !name.startsWith('xsi:'))
+    .forEach((name) => {
+      addEntry(lines, depth, `@${name.split(':').pop()}`, cleanText(elem.attribs[name]));
+    });
+};
+
+// The child that names a form item in place of its tag, as in
+// <Item><ItemDescription>EMAIL</ItemDescription><Value><ValueInString>...</ValueInString></Value></Item>
+// or <Item><Name>DISPOSITION_TYPE</Name><Value>LOC</Value></Item>
+const getItemLabel = (children) => {
+  const names = children.map(localName);
+  let label;
+  if(names.includes('ItemDescription')) {
+    label = children[names.indexOf('ItemDescription')];
+  } else if(names.length === 2 && names.includes('Name') && names.includes('Value')) {
+    label = children[names.indexOf('Name')];
+  }
+  if(label && !childElements(label).length && getText(label).trim()) {
+    return label;
+  }
+  return null;
+};
+
+// A Value's text, held directly or in one typed element such as ValueInString.
+// Null when it holds more than that, so it's shown in full instead.
+const getValueText = (value) => {
+  const children = childElements(value);
+  if(!children.length) return cleanText(getText(value));
+  if(children.length === 1 && !childElements(children[0]).length) return cleanText(getText(children[0]));
+  return null;
+};
+
+const isSimpleValue = (elem) => localName(elem) === 'Value' && getValueText(elem) !== null;
+
+const addElement = (lines, depth, elem) => {
+  const children = childElements(elem);
+  const label = getItemLabel(children);
+  if(label) {
+    addItem(lines, depth, elem, children, label);
+    return;
+  }
+  addEntry(lines, depth, localName(elem), children.length ? '' : cleanText(getText(elem)));
+  addAttributes(lines, depth + 1, elem);
+  children.forEach((child) => addElement(lines, depth + 1, child));
+};
+
+// A form item as "label: value", with the items in its ItemList nested below it
+const addItem = (lines, depth, elem, children, label) => {
+  const name = getText(label).trim().replace(/\s+/g, ' ');
+  const values = [];
+  const nested = [];
+  children.filter((child) => child !== label).forEach((child) => {
+    const childName = localName(child);
+    const listed = childName === 'ValueList' ? childElements(child) : [child];
+    if((childName === 'Value' || childName === 'ValueList') && listed.every(isSimpleValue)) {
+      values.push(...listed.map(getValueText));
+    } else if(childName === 'ItemList') {
+      nested.push(...childElements(child));
+    } else {
+      nested.push(child);
+    }
+  });
+  // Each of several values gets its own line, like repeated XML elements would
+  (values.length ? values : ['']).forEach((value) => addEntry(lines, depth, name, value));
+  addAttributes(lines, depth + 1, elem);
+  nested.forEach((child) => addElement(lines, depth + 1, child));
+};
+
+// XML as indented "name: value" lines, without namespaces, and with form items
+// listed by their descriptions
+export const toReadable = (xml) => {
+  const $ = cheerio.load(xml, { xmlMode: true });
+  const lines = [];
+  $.root().children().each((i, elem) => addElement(lines, 0, elem));
+  // Anything that isn't XML, like a plain text error, is shown as it is
+  return lines.length ? lines.join('\n') : xml;
+};
