@@ -10,6 +10,23 @@ const Header = (props) => (
       </button>
     </div>
     <div className="form-group">
+      <input
+        type="search"
+        className="Header__filter"
+        placeholder="Filter"
+        aria-label="Filter services by name"
+        value={props.filter}
+        onChange={(event) => props.setFilter(event.target.value)}
+      />
+    </div>
+    <div className="form-group">
+      <div className="checkbox">
+        <label>
+          <input type="checkbox" checked={props.preserveLog} onChange={props.togglePreserveLog} /> Preserve log
+        </label>
+      </div>
+    </div>
+    <div className="form-group">
       <div className="checkbox">
         <label>
           <input type="checkbox" checked={props.hideXmlns} onChange={props.toggleHideXmlns} /> Hide XML namespaces
@@ -20,13 +37,6 @@ const Header = (props) => (
       <div className="checkbox">
         <label>
           <input type="checkbox" checked={props.onlyBody} onChange={props.toggleOnlyBody} /> Only body contents
-        </label>
-      </div>
-    </div>
-    <div className="form-group">
-      <div className="checkbox">
-        <label>
-          <input type="checkbox" checked={props.theme === 'dark'} onChange={props.toggleDarkTheme} /> Use dark theme
         </label>
       </div>
     </div>

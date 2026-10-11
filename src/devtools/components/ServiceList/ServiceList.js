@@ -4,9 +4,10 @@ import './ServiceList.css';
 const ServiceList = ({ services, setActiveService }) => {
   const serviceItems = services.map((service) => {
     const isSelectedClass = service.isActive ? 'selected' : '';
+    const isFailedClass = service.failed ? 'failed' : '';
     const attrs = {
       key: service.id,
-      className: `list-group-item ${isSelectedClass}`,
+      className: `list-group-item ${isSelectedClass} ${isFailedClass}`,
       onClick: () => setActiveService(service.id)
     };
     return <li {...attrs}>{service.name}</li>;

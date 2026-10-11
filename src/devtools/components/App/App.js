@@ -2,7 +2,7 @@ import React from 'react';
 import { html as beautifyHTML } from 'js-beautify';
 import uuidV4 from 'uuid/v4';
 import SoapAnalyzer from '../SoapAnalyzer/SoapAnalyzer';
-import { isSOAPRequest, getWebServiceName, getSoapBodyContents, removeXmlns } from '../../util';
+import { isSOAPRequest, isFailedRequest, getWebServiceName, getSoapBodyContents, removeXmlns } from '../../util';
 import './App.css';
 
 class App extends React.Component {
@@ -11,9 +11,10 @@ class App extends React.Component {
     super(props);
     this.state = {
       services : [],
-      theme : props.settings.theme,
+      filter : '',
       hideXmlns : props.settings.hideXmlns,
-      onlyBody : props.settings.onlyBody
+      onlyBody : props.settings.onlyBody,
+      preserveLog : props.settings.preserveLog
     };
     this.addService = this.addService.bind(this);
     this.clearServices = this.clearServices.bind(this);
@@ -21,14 +22,21 @@ class App extends React.Component {
     this.getActiveService = this.getActiveService.bind(this);
     this.onNetworkSOAPRequest = this.onNetworkSOAPRequest.bind(this);
     this.toggleHideXmlns = this.toggleHideXmlns.bind(this);
-    this.toggleDarkTheme = this.toggleDarkTheme.bind(this);
     this.toggleOnlyBody = this.toggleOnlyBody.bind(this);
+    this.togglePreserveLog = this.togglePreserveLog.bind(this);
+    this.setFilter = this.setFilter.bind(this);
   }
 
   componentDidMount() {
     chrome.devtools.network.onRequestFinished.addListener((request) => {
       if(isSOAPRequest(request)) {
         this.onNetworkSOAPRequest(request);
+      }
+    });
+    // Like the Network tab, start a fresh list on page load unless preserving the log
+    chrome.devtools.network.onNavigated.addListener(() => {
+      if(!this.state.preserveLog) {
+        this.clearServices();
       }
     });
   }
@@ -40,6 +48,7 @@ class App extends React.Component {
       id: uuidV4(),
       name: webServiceName,
       isActive: false,
+      failed: isFailedRequest(request),
       request
     });
   }
@@ -107,15 +116,6 @@ class App extends React.Component {
     });
   }
 
-  toggleDarkTheme() {
-    const newTheme = {
-      theme: this.state.theme === 'default' ? 'dark' : 'default'
-    };
-    chrome.storage.sync.set(newTheme, () => {
-      this.setState(() => (newTheme));
-    });
-  }
-
   toggleHideXmlns() {
     const newHideXmlns = {
       hideXmlns: !this.state.hideXmlns
@@ -134,21 +134,45 @@ class App extends React.Component {
     });
   }
 
+  togglePreserveLog() {
+    const newPreserveLog = {
+      preserveLog: !this.state.preserveLog
+    };
+    chrome.storage.sync.set(newPreserveLog, () => {
+      this.setState(() => (newPreserveLog));
+    });
+  }
+
+  setFilter(filter) {
+    this.setState(() => ({ filter }));
+  }
+
+  getFilteredServices() {
+    const filter = this.state.filter.trim().toLowerCase();
+    if(!filter) return this.state.services;
+    return this.state.services.filter((service) => {
+      return service.name.toLowerCase().includes(filter);
+    });
+  }
+
   render() {
     return (
       <SoapAnalyzer
-        services={this.state.services}
+        services={this.getFilteredServices()}
         settings={this.props.settings}
         activeService={this.getActiveService()}
         addService={this.addService}
         clearServices={this.clearServices}
         setActiveService={this.setActiveService}
         toggleHideXmlns={this.toggleHideXmlns}
-        toggleDarkTheme={this.toggleDarkTheme}
         toggleOnlyBody={this.toggleOnlyBody}
+        togglePreserveLog={this.togglePreserveLog}
+        setFilter={this.setFilter}
+        filter={this.state.filter}
         hideXmlns={this.state.hideXmlns}
         onlyBody={this.state.onlyBody}
-        theme={this.state.theme}
+        preserveLog={this.state.preserveLog}
+        theme={this.props.theme}
       />
     );
   }

@@ -36,3 +36,13 @@
 .Header .btn {
   margin-right: 10px;
 }
+
+.Header .Header__filter {
+  width: 160px;
+  height: 20px;
+  padding: 0 6px;
+  font-size: 12px;
+  border: 1px solid;
+  border-radius: 2px;
+  vertical-align: middle;
+}

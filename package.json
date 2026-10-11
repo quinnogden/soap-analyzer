@@ -27,8 +27,6 @@
     "css-loader": "^7.1.5",
     "events": "^3.3.0",
     "html-webpack-plugin": "^5.6.8",
-    "sass": "^1.105.1",
-    "sass-loader": "^17.0.1",
     "style-loader": "^4.0.0",
     "timers-browserify": "^2.0.12",
     "webpack": "^5.111.1",

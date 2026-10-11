@@ -17,9 +17,17 @@ export const isSOAPRequest = (request) => {
   return false;
 };
 
+// Matches the Network tab: HTTP errors, and requests that never got a response
+export const isFailedRequest = (request) => {
+  const { status, _error } = request.response;
+  return status >= 400 || status <= 0 || !!_error;
+};
+
 export const getWebServiceName = async (xml) => {
   return new Promise((resolve, reject) => {
     const parseConfig = {
+      // Attributes on Body would otherwise appear as a '$' key ahead of the service name
+      ignoreAttrs: true,
       tagNameProcessors: [stripPrefix]
     };
     parseString(xml, parseConfig, (err, result) => {

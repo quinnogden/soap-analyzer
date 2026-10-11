@@ -4,17 +4,20 @@ import ReactDOM from 'react-dom';
 import App from './components/App/App';
 import 'bootstrap/dist/js/bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
-import './themes/themes.scss';
+import './themes/themes.css';
 
 const defaultSettings = {
-  theme: 'default',
   hideXmlns: true,
-  onlyBody : true
+  onlyBody : true,
+  preserveLog: false
 };
+
+// Follow the DevTools theme rather than a separate setting
+const theme = chrome.devtools.panels.themeName === 'dark' ? 'dark' : 'default';
 
 chrome.storage.sync.get(defaultSettings, (settings) => {
   ReactDOM.render(
-    <App settings={settings} />,
+    <App settings={settings} theme={theme} />,
     document.getElementById('root')
   );
 });
