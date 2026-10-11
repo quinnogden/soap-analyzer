@@ -16,13 +16,16 @@ A developer tools chrome extension which allows users to easily track any SOAP H
 
 ## Installation and Development
 
-Soap Analyzer is built using webpack, clone the repo, run `npm install`, then run `npm start` to launch to dev environment which watches for file changes and rebuilds. The build folder can be loaded as an unpacked extesion by visiting the [extensions page](chrome://extensions/) in Chrome.
+Soap Analyzer is built using webpack, clone the repo, run `npm install`, then run `npm start` to launch to dev environment which watches for file changes and rebuilds. The `build/dist` folder can be loaded as an unpacked extension:
 
-Running `npm build` will create a zip file in a `./packages` directory, which is deployable to the Chrome Web Store.
+- **Chrome:** visit `chrome://extensions`, enable Developer mode, click "Load unpacked" and select `build/dist`.
+- **Edge:** visit `edge://extensions`, enable Developer mode, click "Load unpacked" and select `build/dist`.
+
+Running `npm run build` will create a zip file in a `./build/packages` directory, which is deployable to the Chrome Web Store and Microsoft Edge Add-ons.
 
 ## Support for other browsers
 
-Currently, the extension is only published in the Chrome Web Store. I am always welcome to pull requests which add support for other browsers! :smiley:
+The extension uses Manifest V3 and works in Chrome and Microsoft Edge (and other Chromium-based browsers, version 88+).
 
 ## License
 
