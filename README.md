@@ -13,13 +13,13 @@ This is a fork of [DJ Collier](https://github.com/collier)'s original [soap-anal
 
 ## Changes in this fork
 
-- **Readable view:** shows requests and responses as indented `name: value` lines instead of XML, without namespaces. Form items are listed by their description (`ItemDescription`) and value, with nested item lists indented below them.
+- **Readable view:** shows requests and responses as indented `name: value` lines instead of XML, without namespaces. Form items are listed by their description (`ItemDescription`, or a `Name` next to a `Value`) and value, with nested item lists indented below them.
 - **Show interface names:** lists calls by the `InterfaceName` elements in their requests instead of by service name. `GetReferenceItemsRequest` calls are listed by their `LookupType` instead. Calls without either keep their service name.
-- **Filter box** to search the list by name.
-- **Find in requests and responses:** a find box next to the tabs highlights every match in the request and response text, and steps through them with Enter and Shift+Enter (or the arrow buttons). Each tab shows how many matches it has, and Ctrl+F (Cmd+F on a Mac) jumps to the box.
+- **Filter box** to search the list by the names it shows, including interface names and lookup types when those are shown.
+- **Find in requests and responses:** a find box next to the tabs highlights every match in the request and response text, ignoring case, and steps through them with Enter and Shift+Enter (or the arrow buttons). Each tab shows how many matches it has, and Ctrl+F (Cmd+F on a Mac) jumps to the box.
 - **Resizable list:** drag the divider between the list and the editor.
 - **Failed calls in red:** calls with an HTTP error, or no response, are highlighted in the list.
-- **Preserve log:** like the Network tab, the list clears when the page navigates unless 'Preserve log' is checked.
+- **Preserve log:** like the Network tab, the list clears when the page navigates unless 'Preserve log' is checked. Calls kept across a page load still show their request and response.
 - **Follows the DevTools theme:** switches between light and dark on its own, in place of the old dark theme setting.
 - **Manifest V3:** runs in current versions of Chrome and Edge, with an updated build (webpack 5, Babel, and plain CSS in place of Sass).
 - **Fixes:**
@@ -35,15 +35,15 @@ The screenshots use made-up sample data.
 
 A form response as XML, with namespaces hidden and only the body shown. Failed calls are red in the list.
 
-![A permit form response shown as XML](docs/screenshots/xml-view.png)
+![A building permit form response shown as XML](docs/screenshots/xml-view.png)
 
-The same response in the readable view.
+The same response in the readable view, with a find for "2027". Each tab shows how many matches it has, and the selected match is in orange.
 
-![The same permit form response shown as indented name: value lines](docs/screenshots/readable-view.png)
+![The same permit form response shown as indented name: value lines, with the matches for 2027 highlighted](docs/screenshots/readable-view.png)
 
-Calls listed by their interface names, in the DevTools dark theme. A call with two forms lists both.
+Calls listed by their interface names, and reference lookups by their lookup type, in the DevTools dark theme. A call with two forms lists both.
 
-![The service list showing interface names, with the panel in the dark theme](docs/screenshots/interface-names-dark.png)
+![The service list showing interface names and lookup types, with the panel in the dark theme](docs/screenshots/interface-names-dark.png)
 
 ## Installation and Development
 
