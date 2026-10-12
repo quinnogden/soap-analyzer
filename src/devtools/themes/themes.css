@@ -26,6 +26,11 @@
   --tab-active-background-color: #428bca;
   --tab-focus-font-color: currentColor;
   --tab-focus-background-color: #eee;
+  --tab-badge-background-color: rgba(128, 128, 128, 0.25);
+
+  /* Find Variables */
+  --find-match-background-color: rgba(255, 213, 0, 0.45);
+  --find-selected-match-background-color: rgb(255, 150, 50);
 
   /* Service Details Variables */
   --sd-font-color: currentColor;
@@ -73,6 +78,11 @@
   --tab-active-background-color: #5f5f5f;
   --tab-focus-font-color: #000;
   --tab-focus-background-color: #c7c7c7;
+  --tab-badge-background-color: rgba(255, 255, 255, 0.2);
+
+  /* Find Variables */
+  --find-match-background-color: rgba(255, 213, 0, 0.3);
+  --find-selected-match-background-color: rgba(255, 140, 0, 0.75);
 
   /* Service Details Variables */
   --sd-font-color: #fff;
@@ -159,6 +169,39 @@
 .ServicePanel .nav > li:not(.active) > a:hover {
   background-color: var(--tab-focus-background-color);
   color: var(--tab-focus-font-color);
+}
+
+.ServicePanel .Tabs__badge {
+  background-color: var(--tab-badge-background-color);
+}
+
+/* Find Styles */
+.ServicePanel .FindBar {
+  border-color: var(--border-color);
+}
+
+.FindBar .FindBar__status,
+.FindBar .FindBar__button {
+  color: var(--tab-font-color);
+}
+
+.FindBar .FindBar__input {
+  color: var(--input-font-color);
+  background-color: var(--input-background-color);
+  border-color: var(--input-border-color);
+}
+
+.FindBar .FindBar__button:not(:disabled):hover {
+  background-color: var(--tab-focus-background-color);
+  color: var(--tab-focus-font-color);
+}
+
+.ace_editor .FindMatch {
+  background-color: var(--find-match-background-color);
+}
+
+.ace_editor .FindMatch--selected {
+  background-color: var(--find-selected-match-background-color);
 }
 
 /* Service Details Styles */

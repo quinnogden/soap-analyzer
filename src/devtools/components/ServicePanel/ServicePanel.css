@@ -30,3 +30,37 @@
   border-radius: 15px;
   font-size: 12px;
 }
+
+/* The find bar shares the row of tabs, and continues its bottom border */
+.ServicePanel .Tabs__bar {
+  display: flex;
+}
+
+.ServicePanel .Tabs__bar .nav-tabs {
+  flex: 1 0 auto;
+}
+
+.ServicePanel .FindBar {
+  height: 26px;
+  margin-top: 4px;
+  padding: 0 6px;
+  border-bottom: 1px solid;
+}
+
+/*
+ * The find bar's matches in the editors (see findHighlight.js). Ace positions
+ * only its own kinds of marker, so these need it too. Like Ace's highlight of
+ * the selected word, they sit above the active line and below the selection.
+ */
+.ServicePanel .ace_marker-layer .FindMatch {
+  position: absolute;
+  z-index: 4;
+}
+
+/* A tab's number of matches */
+.ServicePanel .Tabs__badge {
+  margin-left: 5px;
+  padding: 0 5px;
+  border-radius: 8px;
+  font-size: 11px;
+}

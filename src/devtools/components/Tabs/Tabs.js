@@ -20,12 +20,15 @@ class Tabs extends React.Component {
 
   renderLinks() {
     return this.props.children.map((child, index) => {
-      const { name } = child.props;
+      const { name, badge } = child.props;
       const isTabActive = name === this.state.activeTab;
       const className = isTabActive ? 'active' : '';
       return (
         <li className={className} key={index} onClick={this.handleClick.bind(this, child)}>
-          <a href="#">{name}</a>
+          <a href="#">
+            {name}
+            {badge !== undefined && <span className="Tabs__badge">{badge}</span>}
+          </a>
         </li>
       );
     });
@@ -46,9 +49,13 @@ class Tabs extends React.Component {
   render() {
     return (
       <div className="Tabs">
-        <ul className="nav nav-tabs" role="tablist">
-          {this.renderLinks()}
-        </ul>
+        {/* The toolbar, if there is one, sits at the end of the row of tabs */}
+        <div className="Tabs__bar">
+          <ul className="nav nav-tabs" role="tablist">
+            {this.renderLinks()}
+          </ul>
+          {this.props.toolbar}
+        </div>
         <div className="tab-content">
           {this.renderContents()}
         </div>

@@ -192,3 +192,20 @@ export const toReadable = (xml) => {
   // Anything that isn't XML, like a plain text error, is shown as it is
   return lines.length ? lines.join('\n') : xml;
 };
+
+const escapeRegExp = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+// Every place query appears in text, ignoring case, as the row and columns
+// Ace would give it. Lines are split the same way Ace splits them.
+export const findMatches = (text, query) => {
+  if(!text || !query) return [];
+  const pattern = new RegExp(escapeRegExp(query), 'gi');
+  const matches = [];
+  text.split(/\r\n|\r|\n/).forEach((line, row) => {
+    let match;
+    while((match = pattern.exec(line))) {
+      matches.push({ row, start: match.index, end: match.index + match[0].length });
+    }
+  });
+  return matches;
+};
