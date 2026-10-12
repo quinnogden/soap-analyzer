@@ -2,7 +2,7 @@ import React from 'react';
 import { html as beautifyHTML } from 'js-beautify';
 import uuidV4 from 'uuid/v4';
 import SoapAnalyzer from '../SoapAnalyzer/SoapAnalyzer';
-import { isSOAPRequest, isFailedRequest, getWebServiceName, getInterfaceNames, getListNames, getSoapBodyContents, removeXmlns, toReadable } from '../../util';
+import { isSOAPRequest, isFailedRequest, getResponseContent, getWebServiceName, getInterfaceNames, getListNames, getSoapBodyContents, removeXmlns, toReadable } from '../../util';
 import './App.css';
 
 class App extends React.Component {
@@ -47,6 +47,9 @@ class App extends React.Component {
   }
 
   async onNetworkSOAPRequest(request) {
+    // Ask for the response now: DevTools drops the bodies it hasn't sent yet
+    // when the page navigates, so a call kept by Preserve log couldn't get it later
+    const responseContent = getResponseContent(request);
     const rawRequestXML = request.request.postData.text;
     const webServiceName = await getWebServiceName(rawRequestXML);
     this.addService({
@@ -55,6 +58,7 @@ class App extends React.Component {
       interfaceNames: getInterfaceNames(rawRequestXML),
       isActive: false,
       failed: isFailedRequest(request),
+      responseContent,
       request
     });
   }
@@ -64,7 +68,7 @@ class App extends React.Component {
       return service.id === serviceId;
     });
     const rawRequestXML = selectedService.request.request.postData.text;
-    selectedService.request.getContent((rawResponseXML) => {
+    selectedService.responseContent.then((rawResponseXML) => {
       const services = this.state.services.map((service) => {
         if(service.id === serviceId) {
           if(!service.prettyRequest) {

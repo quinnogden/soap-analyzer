@@ -23,6 +23,14 @@ export const isFailedRequest = (request) => {
   return status >= 400 || status <= 0 || !!_error;
 };
 
+// The response body, or '' when there's none: the request got no response, or
+// DevTools dropped the body when the page navigated before it was asked for
+export const getResponseContent = (request) => {
+  return new Promise((resolve) => {
+    request.getContent((content) => resolve(content || ''));
+  });
+};
+
 export const getWebServiceName = async (xml) => {
   return new Promise((resolve, reject) => {
     const parseConfig = {
