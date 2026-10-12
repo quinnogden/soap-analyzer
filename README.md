@@ -14,7 +14,7 @@ This is a fork of [DJ Collier](https://github.com/collier)'s original [soap-anal
 ## Changes in this fork
 
 - **Readable view:** shows requests and responses as indented `name: value` lines instead of XML, without namespaces. Form items are listed by their description (`ItemDescription`) and value, with nested item lists indented below them.
-- **Show interface names:** lists calls by the `InterfaceName` elements in their requests instead of by service name. Calls without one keep their service name.
+- **Show interface names:** lists calls by the `InterfaceName` elements in their requests instead of by service name. `GetReferenceItemsRequest` calls are listed by their `LookupType` instead. Calls without either keep their service name.
 - **Filter box** to search the list by name.
 - **Find in requests and responses:** a find box next to the tabs highlights every match in the request and response text, and steps through them with Enter and Shift+Enter (or the arrow buttons). Each tab shows how many matches it has, and Ctrl+F (Cmd+F on a Mac) jumps to the box.
 - **Resizable list:** drag the divider between the list and the editor.

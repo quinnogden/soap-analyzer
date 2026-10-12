@@ -55,7 +55,7 @@ class App extends React.Component {
     this.addService({
       id: uuidV4(),
       name: webServiceName,
-      interfaceNames: getInterfaceNames(rawRequestXML),
+      interfaceNames: getInterfaceNames(rawRequestXML, webServiceName),
       isActive: false,
       failed: isFailedRequest(request),
       responseContent,

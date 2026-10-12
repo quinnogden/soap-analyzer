@@ -52,10 +52,15 @@ export const getWebServiceName = async (xml) => {
 
 // Values of the request's InterfaceName elements, in order and without repeats.
 // Services that send them use them to name the screen or form a call is for.
-export const getInterfaceNames = (xml) => {
+// A reference lookup has none, so it's named by the LookupType it asks for.
+export const getInterfaceNames = (xml, serviceName) => {
+  const tags = ['InterfaceName'];
+  if(serviceName === 'GetReferenceItemsRequest') {
+    tags.push('LookupType');
+  }
   const $ = cheerio.load(xml, { xmlMode: true });
   const names = $('*')
-    .filter((i, elem) => elem.name.split(':').pop() === 'InterfaceName')
+    .filter((i, elem) => tags.includes(elem.name.split(':').pop()))
     .map((i, elem) => $(elem).text().trim())
     .get()
     .filter((name) => name);
